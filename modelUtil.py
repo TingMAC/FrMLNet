@@ -4,8 +4,14 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import math
 
+def make_layer(block, num_of_layer, inc=64, outc=64, groups=1):
+    layers = []
+    layers.append(block(inc=inc, outc=outc, groups=groups))
+    for _ in range(1, num_of_layer):
+        layers.append(block(inc=outc, outc=outc, groups=groups))
+    return nn.Sequential(*layers) 
    
-# --- Residual block in GridDehazeNet  --- #    
+# --- Residual block  --- #    
 class Residual_Block(nn.Module): 
     def __init__(self, inc = 64, outc = 64, ks =3, groups=1, dilation=1):
         super(Residual_Block, self).__init__()        
